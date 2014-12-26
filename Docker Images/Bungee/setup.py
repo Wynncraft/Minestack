@@ -41,22 +41,26 @@ def main():
         sys.exit(1)
 
     plugins = []
-    for pluginInfo in bungeetype['plugins']:
-        plugin = pluginsCollection.find_one({"_id": ObjectId(pluginInfo['plugin_id'])})
-        pluginConfig = None
-        pluginVersion = None
-        for config in plugin['configs']:
-            if config['_id'] == ObjectId(pluginInfo['pluginconfig_id']):
-                pluginConfig = config
-                break
+    if 'plugins' in bungeetype:
+        for pluginInfo in bungeetype['plugins']:
+            plugin = pluginsCollection.find_one({"_id": ObjectId(pluginInfo['plugin_id'])})
+            pluginConfig = None
+            pluginVersion = None
 
-        for version in plugin['versions']:
-            if version['_id'] == ObjectId(pluginInfo['pluginversion_id']):
-                pluginVersion = version
-                break
+            if 'configs' in plugin and 'pluginconfig_id' in pluginInfo:
+                for config in plugin['configs']:
+                    if config['_id'] == ObjectId(pluginInfo['pluginconfig_id']):
+                        pluginConfig = config
+                        break
 
-        pluginDict = {'plugin': plugin, 'version': pluginVersion, 'config': pluginConfig}
-        plugins.append(pluginDict)
+            if 'versions' in plugin and 'pluginversion_id' in pluginInfo:
+                for version in plugin['versions']:
+                    if version['_id'] == ObjectId(pluginInfo['pluginversion_id']):
+                        pluginVersion = version
+                        break
+
+            pluginDict = {'plugin': plugin, 'version': pluginVersion, 'config': pluginConfig}
+            plugins.append(pluginDict)
 
     print('Copying Main Bungee files')
     os.system('cp -R /mnt/minestack/bungee/* .')
@@ -68,6 +72,10 @@ def main():
         version = pluginInfo['version']
         config = pluginInfo['config']
         print('Copying plugin '+plugin['name'])
+
+        if version is None:
+            print('Plugin '+plugin['name']+' has no version. Skipping')
+            continue
 
         if config is not None:
             os.system('cp -R /mnt/minestack/plugins/'+plugin['directory']+'/configs/'+config['name']+' plugins/'+plugin['directory'])

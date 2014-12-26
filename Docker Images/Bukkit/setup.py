@@ -34,35 +34,40 @@ def main():
 
     worlds = []
     plugins = []
-    for worldInfo in servertype['worlds']:
-        world = worldsCollection.find_one({"_id": ObjectId(worldInfo['world_id'])})
-        worldVersion = None
-        for version in world['versions']:
-            if version['_id'] == ObjectId(worldInfo['worldversion_id']):
-                worldVersion = version
-                break
+    if 'worlds' in servertype:
+        for worldInfo in servertype['worlds']:
+            world = worldsCollection.find_one({"_id": ObjectId(worldInfo['world_id'])})
+            worldVersion = None
+            if 'versions' in world and 'worldversion_id' in worldInfo:
+                for version in world['versions']:
+                    if version['_id'] == ObjectId(worldInfo['worldversion_id']):
+                        worldVersion = version
+                        break
 
-        default = worldInfo['defaultWorld']
-        worldDict = {'world': world, 'version': worldVersion, 'default': default}
-        worlds.append(worldDict)
-        print('Loaded '+world['name'])
+            default = worldInfo['defaultWorld']
+            worldDict = {'world': world, 'version': worldVersion, 'default': default}
+            worlds.append(worldDict)
 
-    for pluginInfo in servertype['plugins']:
-        plugin = pluginsCollection.find_one({"_id": ObjectId(pluginInfo['plugin_id'])})
-        pluginConfig = None
-        pluginVersion = None
-        for config in plugin['configs']:
-            if config['_id'] == ObjectId(pluginInfo['pluginconfig_id']):
-                pluginConfig = config
-                break
+    if 'plugins' in servertype:
+        for pluginInfo in servertype['plugins']:
+            plugin = pluginsCollection.find_one({"_id": ObjectId(pluginInfo['plugin_id'])})
+            pluginConfig = None
+            pluginVersion = None
 
-        for version in plugin['versions']:
-            if version['_id'] == ObjectId(pluginInfo['pluginversion_id']):
-                pluginVersion = version
-                break
+            if 'configs' in plugin and 'pluginconfig_id' in pluginInfo:
+                for config in plugin['configs']:
+                    if config['_id'] == ObjectId(pluginInfo['pluginconfig_id']):
+                        pluginConfig = config
+                        break
 
-        pluginDict = {'plugin': plugin, 'version': pluginVersion, 'config': pluginConfig}
-        plugins.append(pluginDict)
+            if 'versions' in plugin and 'pluginversion_id' in pluginInfo:
+                for version in plugin['versions']:
+                    if version['_id'] == ObjectId(pluginInfo['pluginversion_id']):
+                        pluginVersion = version
+                        break
+
+            pluginDict = {'plugin': plugin, 'version': pluginVersion, 'config': pluginConfig}
+            plugins.append(pluginDict)
 
     print('Copying Main Server files')
     os.system('cp -R /mnt/minestack/server/bukkit/* .')
@@ -74,6 +79,11 @@ def main():
         version = worldInfo['version']
         default = worldInfo['default']
         print('Copying world '+world['name'])
+
+        if version is None:
+            print('World '+world['name']+' has no version. Skipping')
+            continue
+
         if default is True:
             defaultWorld = world
         os.system('cp -R /mnt/minestack/worlds/'+world['directory']+'/versions/'+version['version']+' worlds/'+world['directory'])
@@ -93,6 +103,10 @@ def main():
         version = pluginInfo['version']
         config = pluginInfo['config']
         print('Copying plugin '+plugin['name'])
+
+        if version is None:
+            print('Plugin '+plugin['name']+' has no version. Skipping')
+            continue
 
         if config is not None:
             os.system('cp -R /mnt/minestack/plugins/'+plugin['directory']+'/configs/'+config['name']+' plugins/'+plugin['directory'])
