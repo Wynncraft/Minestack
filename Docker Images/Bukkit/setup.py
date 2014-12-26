@@ -86,7 +86,8 @@ def main():
 
         if default is True:
             defaultWorld = world
-        os.system('cp -R /mnt/minestack/worlds/'+world['directory']+'/versions/'+version['version']+' worlds/'+world['directory'])
+        os.system('mkdir worlds/'+world['directory'])
+        os.system('cp -R /mnt/minestack/worlds/'+world['directory']+'/versions/'+version['version']+'/* worlds/'+world['directory'])
     os.system('ls -l worlds')
 
     if defaultWorld is None:
@@ -97,7 +98,6 @@ def main():
     modifyConfig('levelname', defaultWorld['name'])
 
     os.system('mkdir plugins')
-    os.system('mkdir tempPlugins')
     for pluginInfo in plugins:
         plugin = pluginInfo['plugin']
         version = pluginInfo['version']
@@ -109,8 +109,9 @@ def main():
             continue
 
         if config is not None:
-            os.system('cp -R /mnt/minestack/plugins/'+plugin['directory']+'/configs/'+config['name']+' plugins/'+plugin['directory'])
-        os.system('cp -R /mnt/minestack/plugins/'+plugin['directory']+'/versions/'+version['version']+' plugins')
+            os.system('mkdir plugins/'+plugin['directory'])
+            os.system('cp -R /mnt/minestack/plugins/'+plugin['directory']+'/configs/'+config['name']+'/* plugins/'+plugin['directory'])
+        os.system('cp -R /mnt/minestack/plugins/'+plugin['directory']+'/versions/'+version['version']+'/* plugins')
     os.system('ls -l plugins')
 
     # modify server config for num of players

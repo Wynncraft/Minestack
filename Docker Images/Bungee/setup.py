@@ -66,7 +66,6 @@ def main():
     os.system('cp -R /mnt/minestack/bungee/* .')
 
     os.system('mkdir plugins')
-    os.system('mkdir tempPlugins')
     for pluginInfo in plugins:
         plugin = pluginInfo['plugin']
         version = pluginInfo['version']
@@ -78,8 +77,9 @@ def main():
             continue
 
         if config is not None:
-            os.system('cp -R /mnt/minestack/plugins/'+plugin['directory']+'/configs/'+config['name']+' plugins/'+plugin['directory'])
-        os.system('cp -R /mnt/minestack/plugins/'+plugin['directory']+'/versions/'+version['version']+' plugins')
+            os.system('mkdir plugins/'+plugin['directory'])
+            os.system('cp -R /mnt/minestack/plugins/'+plugin['directory']+'/configs/'+config['name']+'/* plugins/'+plugin['directory'])
+        os.system('cp -R /mnt/minestack/plugins/'+plugin['directory']+'/versions/'+version['version']+'/* plugins')
     os.system('ls -l plugins')
 
     defaultServer = None
