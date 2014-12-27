@@ -2,7 +2,7 @@ FROM centos:centos6
 MAINTAINER Jodie Belgrave
 
 # General Stuff
-RUN yum -y install wget openssl
+RUN yum -y install wget openssl openssl-devel
 RUN wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 RUN rpm -Uvh epel-release-6-8.noarch.rpm
 RUN yum -y update
