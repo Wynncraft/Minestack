@@ -29,9 +29,6 @@ ENV bungee_id NULL
 RUN mkdir /minestack
 ADD setup.py /minestack/setup.py
 
-# Expose Port
-EXPOSE 25565
-
 # Run
 WORKDIR /minestack
 ENTRYPOINT ["python", "-u", "setup.py"]
