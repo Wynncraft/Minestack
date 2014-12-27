@@ -63,7 +63,7 @@ def main():
             plugins.append(pluginDict)
 
     print('Copying Main Bungee files')
-    os.system('cp -R /mnt/minestack/bungee/* .')
+    os.system('cp -R /mnt/minestack/server/bungee/* .')
 
     os.system('mkdir plugins')
     for pluginInfo in plugins:
