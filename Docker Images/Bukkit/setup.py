@@ -5,8 +5,12 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 
 def modifyConfig(expression, value):
-    print('Modifying '+expression+' with value '+str(value))
+    print('Modifying server.properties '+expression+' with value '+str(value))
     os.system("sed -i 's/"+str(expression)+"/"+str(value)+"/' server.properties")
+
+def modifyLog(expression, value):
+    print('Modifying log4j2.xml '+expression+' with value '+str(value))
+    os.system("sed -i 's/"+str(expression)+"/"+str(value)+"/' log4j2.xml")
 
 def main():
 
@@ -17,6 +21,7 @@ def main():
     db = client[mongoDB]
     serverCollection = db['servers']
     servertypesCollection = db['servertypes']
+    nodesCollection = db['nodes']
     worldsCollection = db['worlds']
     pluginsCollection = db['plugins']
 
@@ -27,6 +32,10 @@ def main():
     query = {"_id": ObjectId(server['server_type_id'])}
 
     servertype = servertypesCollection.find_one(query)
+
+    query = {"_id": ObjectId(server['node_id'])}
+
+    node = nodesCollection.find_one(query)
 
     if servertype is None:
         print('No server type found')
@@ -116,6 +125,10 @@ def main():
 
     # modify server config for num of players
     modifyConfig('maxplayers', servertype['players'])
+
+    modifyLog('SYS_HOST', node['privateAddress'])
+    modifyLog('SERVERTYPE', servertype['name'])
+    modifyLog('NUMBER', server['number'])
 
     os.system('touch .update-lock')
 
