@@ -2,7 +2,7 @@ FROM centos:centos6
 MAINTAINER Jodie Belgrave
 
 # General Stuff
-RUN yum -y install wget tar gcc openssl openssl-devel
+RUN yum -y install wget gcc openssl openssl-devel
 RUN wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 RUN rpm -Uvh epel-release-6-8.noarch.rpm
 RUN yum -y update
@@ -12,7 +12,7 @@ RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=acc
 RUN rpm -Uvh jdk-8u25-linux-x64.rpm
 
 # Install PyMongo
-RUN yum -y install python-pip python-devel
+RUN yum -y install python-pip gcc python-devel
 RUN pip install pymongo
 
 # Environment Variables

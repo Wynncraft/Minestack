@@ -96,8 +96,7 @@ def main():
         if default is True:
             defaultWorld = world
         os.system('mkdir worlds/'+world['directory'])
-        os.system('cp -R /mnt/minestack/worlds/'+world['directory']+'/versions/'+version['version']+'/world.tar.gz worlds/')
-        os.system('tar -zxf world.tar.gz -C worlds/'+world['directory'])
+        os.system('cp -R /mnt/minestack/worlds/'+world['directory']+'/versions/'+version['version']+'/* worlds/'+world['directory'])
     os.system('ls -l worlds')
 
     if defaultWorld is None:
