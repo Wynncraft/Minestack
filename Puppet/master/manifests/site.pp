@@ -72,15 +72,81 @@ node basenode {
                 state => ['NEW'],
                 action => "accept",
         }
+        firewall {"999 drop all":
+                proto => "all",
+                action => "drop",
+        }
+}
+
+node 'puppet.internal.puppet' inherits basenode {
+        class {'::ntp':
+                restrict => ['172.16.0.0 mask 255.255.240.0 nomodify notrap'];
+        }
+}
+
+node 'nfs.internal.puppet' inherits basenode {
+        class {'::ntp':
+                servers => ['puppet.internal.puppet'],
+                restrict => ['127.0.0.1'],
+        }
+
+        file {"/minestack":
+                ensure => directory,
+        }
+
+        file {"/mnt/minestack":
+                ensure => directory,
+        }
+
+        include nfs::server
+        nfs::server::export{'/minestack':
+                ensure => 'mounted',
+                clients => '172.16.0.0/16(ro,sync,no_root_squash,no_subtree_check) localhost(rw)',
+                mount => '/mnt/minestack'
+        }
+
+        mount {"/mnt/minestack":
+                device => "localhost:/minestack",
+                fstype => "nfs",
+                ensure => "mounted",
+                options => "ro,auto,noatime,nolock,fg,nfsvers=3,intr,tcp,actimeo=1800",
+                atboot => true,
+        }
+}
+
+node /^node(\d+)\.internal\.puppet$/ inherits basenode {
+        class {'::ntp':
+                servers => ['puppet.internal.puppet'],
+                restrict => ['127.0.0.1'],
+        }
+
+        file {"/mnt/minestack":
+                ensure => directory,
+        }
+
+        mount {"/mnt/minestack":
+                device => "nfs.internal.puppet:/minestack",
+                fstype => "nfs",
+                ensure => "mounted",
+                options => "ro,auto,noatime,nolock,fg,nfsvers=3,intr,tcp,actimeo=1800",
+                atboot => true,
+        }
+
+        file {"/tmp/minestack":
+                ensure => directory,
+        }
+
+        file {"/tmp/minestack/docker":
+                ensure => directory,
+                recurse => remote ,
+                source => "puppet:///modules/minestack/docker",
+        }
+
         firewall {"005 accept all from docker0":
                 iniface => "docker0",
                 proto => "all",
                 state => ['NEW'],
                 action => "accept",
-        }
-        firewall {"999 drop all":
-                proto => "all",
-                action => "drop",
         }
 
         package {'docker-io':
@@ -94,29 +160,6 @@ node basenode {
                 tcp_bind => "tcp://$nodeName:4243",
                 socket_bind => 'unix:///var/run/docker.sock',
                 dns => '172.16.0.1',
-        }
-}
-
-node 'puppet.internal.puppet' inherits basenode {
-        class {'::ntp':
-                restrict => ['172.16.0.0 mask 255.255.255.0 nomodify notrap'];
-        }
-}
-
-node /^node(\d+)\.internal\.puppet$/ inherits basenode {
-        class {'::ntp':
-                servers => ['puppet.internal.puppet'],
-                restrict => ['127.0.0.1'],
-        }
-
-        file {"/tmp/minestack":
-                ensure => directory,
-        }
-
-        file {"/tmp/minestack/docker":
-                ensure => directory,
-                recurse => remote ,
-                source => "puppet:///modules/minestack/docker",
         }
 
         docker::image{'minestack/bukkit':
