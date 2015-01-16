@@ -1,5 +1,6 @@
 #!/bin/bash
 
+puppet module install puppetlabs-apache
 puppet module install garethr-docker
 puppet module install puppetlabs-firewall
 puppet module install puppetlabs-ntp

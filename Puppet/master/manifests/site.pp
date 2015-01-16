@@ -114,6 +114,57 @@ node 'nfs.internal.puppet' inherits basenode {
         }
 }
 
+node 'web.internal.puppet' inherits basenode {
+        package {"webstatic":
+                provider => rpm,
+                source => "https://mirror.webtatic.com/yum/el6/latest.rpm",
+                ensure => installed,
+                unless => '',
+        }
+
+        class {'apache': }
+
+        package {"php55w":
+                ensure => installed,
+        }
+
+        package {"php55w-pear":
+                require => Package["php55w"],
+                ensure => installed,
+        }
+
+        package {"php55w-devel":
+                require => Package["php55w"],
+                ensure => installed,
+        }
+
+        class {'::apache::mod::php':
+                package_name => "php55w",
+                path => "${::apache::params::lib_path}/libphp5.so",
+        }
+
+        package {"gcc":
+                ensure => installed
+        }
+
+        exec {"php-mongo":
+                require => Package["gcc"],
+                command => "yes 'no' | pecl install mongo",
+                path => ["/bin/", "/usr/bin/"],
+                unless => 'pecl info mongo',
+        }
+
+        file { "/etc/php.d/mongo.ini":
+                content=> 'extension=mongo.so',
+                require => Exec["php-mongo"]
+        }
+
+        exec{"curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/bin":
+                path => "/usr/bin/",
+                creates => '/usr/bin/composer'
+        }
+}
+
 node /^node(\d+)\.internal\.puppet$/ inherits basenode {
         class {'::ntp':
                 servers => ['puppet.internal.puppet'],
