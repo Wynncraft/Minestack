@@ -179,7 +179,7 @@ node 'web.internal.puppet' {
                 docroot => '/var/www/minestack/public',
         }
 
-        firewall {"005 accpt http(s)":
+        firewall {"005 accept http(s)":
                 proto => 'tcp',
                 port => [80, 443],
                 state => ['NEW'],
@@ -225,6 +225,7 @@ node /^node(\d+)\.internal\.puppet$/ {
         }
 
         package {'docker-io':
+                require => [Yumrepo['epel'], Yumrepo['epel-testing']],
                 ensure => 'installed',
                 install_options => ['--enablerepo=epel-testing'],
         }
