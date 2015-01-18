@@ -177,6 +177,7 @@ node 'web.internal.puppet' {
                 require => File['/var/www/minestack'],
                 port => '80',
                 docroot => '/var/www/minestack/public',
+                setenv => ["APP_ENV production"],
         }
 
         firewall {"005 accept http(s)":
