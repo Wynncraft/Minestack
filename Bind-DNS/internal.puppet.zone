@@ -1,0 +1,22 @@
+$TTL 86400
+@       IN      SOA     ns1.internal.puppet.    root.internal.puppet. (
+                2014011401; Serial
+                3600; Refresh
+                1800; Retry
+                604800; Expire
+                86400; Min TTL
+)
+; Named Servers
+                        IN      NS      ns1.internal.puppet.
+                        IN      NS      ns2.internal.puppet.
+; NS Hosts to IP
+ns1     IN      A       172.16.0.1
+ns2     IN      A       172.16.0.1
+
+; Hostname -> IP Pairs
+@       IN      A       172.16.0.1
+puppet  IN      A       172.16.0.1
+nfs     IN      A       172.16.0.2
+web     IN      A       172.16.0.3
+node1   IN      A       172.16.0.4
+node2   IN      A       172.16.0.5
