@@ -123,6 +123,10 @@ node 'web.internal.puppet' {
                 ensure => installed,
         }
 
+        package {"git":
+                ensure => installed,
+        }
+
         package {"php55w":
                 require => Package["webtatic-release-6-5.noarch"],
                 ensure => installed,
@@ -162,19 +166,18 @@ node 'web.internal.puppet' {
 
         class {'apache':
                 default_vhost => false
-        }
+        }->
         class {'::apache::mod::php':
                 package_name => "php55w",
                 path => "${::apache::params::lib_path}/libphp5.so",
-        }
-
-        file {"/var/www/minestack":
-                require => Package['httpd'],
-                ensure => directory
-        }
-
+        }->
+        vcsrepo { "/var/www/minestack":
+                ensure   => present,
+                provider => git,
+                source   => "https://github.com/Minestack/CraftingTable.git",
+        }->
         apache::vhost{'minestack':
-                require => File['/var/www/minestack'],
+                require => Class['vcsrepo'],
                 port => '80',
                 docroot => '/var/www/minestack/public',
                 setenv => ["APP_ENV production"],
