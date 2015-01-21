@@ -7,14 +7,14 @@ class minestack::docker inherits minestack {
     action => "accept",
   }
 
+  $nodeName = $trusted['certname']
+
   package {'docker-io':
     require => [Yumrepo['epel'], Yumrepo['epel-testing']],
     ensure => 'installed',
     install_options => ['--enablerepo=epel-testing'],
-  }
-
-  $nodeName = $trusted['certname']
-  class {'docker':
+  }->
+  class {'::docker':
     manage_package => false,
     tcp_bind => "tcp://$nodeName:4243",
     socket_bind => 'unix:///var/run/docker.sock',

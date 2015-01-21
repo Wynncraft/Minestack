@@ -9,3 +9,4 @@ puppet module install flakrat-repo_elrepo
 puppet module install saz-rsyslog
 puppet module install haraldsk-nfs
 puppet module install puppetlabs-vcsrepo
+cp -R master/modules/minestack /etc/puppet/modules/minestack

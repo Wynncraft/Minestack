@@ -5,3 +5,4 @@ yum install puppet-server
 puppet master --verbose --no-daemonize
 chkconfig puppetmaster on
 service puppetmaster start
+./installModules.sh

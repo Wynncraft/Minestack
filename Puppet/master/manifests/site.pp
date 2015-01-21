@@ -1,4 +1,7 @@
-include minestack
+class {'minestack':
+  rsysloghost => 'syslog.internal.puppet',
+  rsyslogport => '514',
+}
 
 node 'puppet.internal.puppet' {
   class {'minestack::ntpserver':
@@ -16,7 +19,7 @@ node 'nfs.internal.puppet' {
 }
 
 node 'web.internal.puppet' {
-  include minstack::web
+  include minestack::web
 }
 
 node /^node(\d+)\.internal\.puppet$/ {

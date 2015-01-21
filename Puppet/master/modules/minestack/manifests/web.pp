@@ -46,20 +46,19 @@ class minestack::web inherits minestack {
     creates => '/usr/bin/composer'
   }
 
-  class {'apache':
-    default_vhost => false
-  }->
-  class {'::apache::mod::php':
-    package_name => "php55w",
-    path => "${::apache::params::lib_path}/libphp5.so",
-  }->
   vcsrepo { "/var/www/minestack":
     ensure   => present,
     provider => git,
     source   => "https://github.com/Minestack/CraftingTable.git",
   }->
+  class {'apache':
+    default_vhost => false
+  }
+  class {'::apache::mod::php':
+    package_name => "php55w",
+    path => "${::apache::params::lib_path}/libphp5.so",
+  }
   apache::vhost{'minestack':
-    require => Class['vcsrepo'],
     port => '80',
     docroot => '/var/www/minestack/public',
     setenv => ["APP_ENV production"],
