@@ -1,6 +1,21 @@
 class minestack::nfsserver($clientsubnet = '172.16.0.0/16') inherits minestack {
   file {"/minestack":
     ensure => directory,
+  }->
+  file {"/minestack/server":
+    ensure => directory,
+  }->
+  file {"/minestack/server/bungee":
+    ensure => directory,
+  }->
+  file {"/minestack/server/bukkit":
+    ensure => directory,
+  }->
+  file {"/minestack/plugins":
+    ensure => directory,
+  }->
+  file {"/minestack/worlds":
+    ensure => directory,
   }
 
   file {"/mnt/minestack":
