@@ -61,6 +61,7 @@ class minestack::web inherits minestack {
   apache::vhost{'minestack':
     port => '80',
     docroot => '/var/www/minestack/public',
+    override => 'All',
     setenv => ["APP_ENV production"],
   }
 
