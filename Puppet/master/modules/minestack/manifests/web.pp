@@ -46,6 +46,9 @@ class minestack::web inherits minestack {
     creates => '/usr/bin/composer'
   }
 
+  exec{"setsebool -P httpd_can_network_connect 1":
+    path => "/usr/sbin/",
+  }->
   vcsrepo { "/var/www/minestack":
     ensure   => present,
     provider => git,
