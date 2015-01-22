@@ -5,20 +5,15 @@ class minestack($rsysloghost = 'localhost', $rsyslogport = '514') {
   class {'repo_elrepo':
     enable_elrepo => true,
     enable_kernel => true,
-  }
-
-  include repo_elrepo::kernel
-
+  }->
+  class {'repo_elrepo::kernel': }->
   file {'/etc/sysconfig/kernel':
-    require => Yumrepo['elrepo-kernel'],
     owner => root,
     group => root,
     mode => 644,
     source => "puppet:///modules/minestack/sysconfig/kernel",
-  }
-
+  }->
   package {'kernel-lt':
-    require => File['/etc/sysconfig/kernel'],
     ensure => 'installed',
     #provider => 'linux',
   }
