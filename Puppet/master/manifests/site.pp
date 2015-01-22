@@ -26,5 +26,8 @@ node /^node(\d+)\.internal\.puppet$/ {
   class {'minestack::ntpclient':
     server => 'puppet.internal.puppet',
   }
+  class {'minestack::nfsclient':
+    server => 'puppet.internal.puppet',
+  }
   include minestack::docker
 }
