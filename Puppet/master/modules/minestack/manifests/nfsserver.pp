@@ -13,8 +13,7 @@ class minestack::nfsserver($clientsubnet = '172.16.0.0/16') inherits minestack {
     ensure => 'mounted',
     clients => "${$clientsubnet}(ro,sync,no_root_squash,no_subtree_check) localhost(rw)",
     mount => '/mnt/minestack'
-  }
-
+  }->
   mount {"/mnt/minestack":
     require => File['/mnt/minestack'],
     device => "localhost:/minestack",
