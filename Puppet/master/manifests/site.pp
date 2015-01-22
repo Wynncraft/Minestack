@@ -14,7 +14,7 @@ node 'nfs.internal.puppet' {
     server => 'puppet.internal.puppet',
   }
   class {'minestack::nfsserver':
-    clientsubnet => '172.16.0.0/16',
+    clientsubnet => '172.16.0.0/12',
   }
 }
 
