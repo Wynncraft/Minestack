@@ -32,5 +32,4 @@ node /^node(\d+)\.internal\.puppet$/ {
   class {'minestack::docker':
     dns => '172.16.0.1'
   }
-  include minestack::docker
 }
