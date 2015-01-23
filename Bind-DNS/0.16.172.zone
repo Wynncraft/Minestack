@@ -1,0 +1,18 @@
+$TTL 86400
+@       IN      SOA     ns1.internal.puppet.        root.internal.puppet. (
+                2014011401; Serial
+                3600; Refresh
+                1800; Retry
+                604800; Expire
+                86400; Min TTL
+)
+; Named Servers
+0.16.172.in-addr.arpa.      IN      NS      ns1.internal.puppet.
+0.16.172.in-addr.arpa.      IN      NS      ns2.internal.puppet.
+; PTR Rcords
+1      IN      PTR     internal.puppet.
+1      IN      PTR     puppet.internal.puppet.
+2      IN      PTR     nfs.internal.puppet.
+3      IN      PTR     web.internal.puppet.
+4      IN      PTR     node1.internal.puppet.
+5      IN      PTR     node2.internal.puppet.
