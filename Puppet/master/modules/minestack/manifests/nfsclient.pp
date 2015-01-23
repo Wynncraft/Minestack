@@ -2,10 +2,11 @@ class minestack::nfsclient($nfsserver = "nfs.internal.puppet") inherits minestac
 
   file {"/mnt/minestack":
     ensure => directory,
-  }
-
+  }->
+  package {['nfs-utils', 'nfs-utils-lib']:
+    ensure => 'installed'
+  }->
   mount {"/mnt/minestack":
-    require => File['/mnt/minestack'],
     device => "${nfsserver}:/minestack",
     fstype => "nfs",
     ensure => "mounted",
