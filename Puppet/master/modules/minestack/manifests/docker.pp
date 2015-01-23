@@ -1,4 +1,4 @@
-class minestack::docker inherits minestack {
+class minestack::docker($dns = '172.16.0.1') inherits minestack {
 
   firewall {"005 accept all from docker0":
     iniface => "docker0",
@@ -18,7 +18,7 @@ class minestack::docker inherits minestack {
     manage_package => false,
     tcp_bind => "tcp://$nodeName:4243",
     socket_bind => 'unix:///var/run/docker.sock',
-    dns => '172.16.0.1',
+    dns => $dns,
   }
 
   docker::image{'minestack/bukkit':

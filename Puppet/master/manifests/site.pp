@@ -27,7 +27,10 @@ node /^node(\d+)\.internal\.puppet$/ {
     server => 'puppet.internal.puppet',
   }
   class {'minestack::nfsclient':
-    server => 'puppet.internal.puppet',
+    nfsserver => 'puppet.internal.puppet',
+  }
+  class {'minestack::docker':
+    dns => '172.16.0.1'
   }
   include minestack::docker
 }
