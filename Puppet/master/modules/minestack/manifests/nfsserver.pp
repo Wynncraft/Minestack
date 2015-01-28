@@ -34,7 +34,7 @@ class minestack::nfsserver($clientsubnet = '172.16.0.0/16') inherits minestack {
     device => "localhost:/minestack",
     fstype => "nfs",
     ensure => "mounted",
-    options => "ro",
+    options => "ro,bg,hard",
     atboot => true,
   }
 }

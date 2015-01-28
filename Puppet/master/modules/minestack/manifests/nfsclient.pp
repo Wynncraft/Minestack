@@ -10,7 +10,7 @@ class minestack::nfsclient($nfsserver = "nfs.internal.puppet") inherits minestac
     device => "${nfsserver}:/minestack",
     fstype => "nfs",
     ensure => "mounted",
-    options => "ro",
+    options => "ro,bg,hard",
     atboot => true,
   }
 
