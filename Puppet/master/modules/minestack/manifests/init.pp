@@ -41,6 +41,8 @@ class minestack($rsysloghost = 'localhost', $rsyslogport = '514') {
     custom_config => 'rsyslog/rsyslog.erb'
   }
 
+  class { 'fail2ban': }
+
   class {'firewall':}
 
   firewallchain {'OUTPUT:filter:IPv4':
