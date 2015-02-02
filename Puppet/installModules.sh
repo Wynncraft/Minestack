@@ -10,3 +10,4 @@ puppet module install saz-rsyslog
 puppet module install echocat-nfs
 puppet module install puppetlabs-vcsrepo
 cp -R master/modules/minestack /etc/puppet/modules/minestack
+cp -R master/modules/rsyslog /etc/puppet/modules/rsyslog

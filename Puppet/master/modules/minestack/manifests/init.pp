@@ -1,5 +1,6 @@
 class minestack($rsysloghost = 'localhost', $rsyslogport = '514') {
 
+  $remoteHost = "*.*          @${$rsysloghost}:${$rsyslogport}"
   include epel
 
   class {'repo_elrepo':
@@ -34,7 +35,10 @@ class minestack($rsysloghost = 'localhost', $rsyslogport = '514') {
     ]
   }
 
-  class {'rsyslog::server':}
+  class {'rsyslog::server':
+    server_dir => $remoteHost,
+    custom_config => 'rsyslog/rsyslog.erb'
+  }
 
   class {'firewall':}
 
