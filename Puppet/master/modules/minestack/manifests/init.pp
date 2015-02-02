@@ -24,6 +24,7 @@ class minestack($rsysloghost = 'localhost', $rsyslogport = '514') {
   #}
 
   class{'rsyslog::client':
+    log_local => true,
     port => '514',
     remote_servers => [
       {
