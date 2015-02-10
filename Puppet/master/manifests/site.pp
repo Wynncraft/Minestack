@@ -5,7 +5,7 @@ class {'minestack':
 
 node 'puppet.internal.puppet' {
   class {'minestack::ntpserver':
-    clientsubnet => '172.16.0.0 mask 255.255.240.0',
+    clientsubnet => '172.16.0.0 mask 255.240.0.0',
   }
 }
 
